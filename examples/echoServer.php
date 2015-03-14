@@ -1,5 +1,5 @@
 <?php
-require_once('_RequiredFiles.php');
+require_once('../../../autoload.php')
 
 use noFlash\Shout\Shout;
 use noFlash\TinyWs\AbstractClientsHandler;
