@@ -1,0 +1,35 @@
+{
+  "name": "noflash/tinyws",
+  "description": "High performance, flexible, RFC-complaint & well documented WebSockets server library.",
+  "keywords": [
+    "websocket",
+    "server",
+    "secure",
+    "fast",
+    "psr-4"
+  ],
+  "homepage": "http://github.com/kiler129/TinyWs",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Grzegorz Zdanowski",
+      "email": "grzegorz@noflash.pl",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0",
+    "lib-openssl": "*",
+    "noflash/cherryhttp": "dev-master",
+    "psr/log": "~1.0"
+  },
+  "suggest": {
+    "noflash/shout": "Required to see any log messages from server. Also needed by most examples."
+  },
+  "autoload": {
+    "psr-4": {
+      "noFlash\\TinyWs\\": "src"
+    }
+  }
+}
