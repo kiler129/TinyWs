@@ -59,6 +59,7 @@ class UpgradeHandler implements HttpRequestHandlerInterface
 
         $newClient = new WebSocketClient($this->clientsHandler, $client->socket, $this->logger);
         $newClient->pushData($switchResponse);
+        $this->clientsHandler->onAfterUpgrade($newClient);
 
         throw new ClientUpgradeException($client, $newClient);
     }

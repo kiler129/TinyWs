@@ -35,6 +35,13 @@ abstract class AbstractClientsHandler implements ClientsHandlerInterface
     /**
      * {@inheritdoc}
      */
+    public function onAfterUpgrade(WebSocketClient $client)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function onException(WebSocketClient $client, $code)
     {
     }

@@ -29,6 +29,13 @@ interface ClientsHandlerInterface
     public function onUpgrade(HttpClient $client, HttpRequest $request, HttpResponse $response);
 
     /**
+     * Called just after client upgrade.
+     *
+     * @param WebSocketClient $client
+     */
+    public function onAfterUpgrade(WebSocketClient $client);
+
+    /**
      * Called everytime new message is received.
      *
      * @param WebSocketClient $client
