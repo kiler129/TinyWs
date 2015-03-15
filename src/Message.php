@@ -5,6 +5,7 @@ use InvalidArgumentException;
 use LogicException;
 use OverflowException;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Single WebSocket message
