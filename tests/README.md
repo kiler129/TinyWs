@@ -1,6 +1,8 @@
 # Functional tests
 TinyWs is tested before every repository push. Tests are performed using [Autobahn Testsuite](http://autobahn.ws/testsuite/usage.html).  
-To run test by yourself you have to [install Autobahn Testsuite](http://autobahn.ws/testsuite/installation.html#installation) first. Next start [**fuzzingEchoServer** example](https://github.com/kiler129/TinyWs/blob/master/examples/fuzzingEchoServer.php) and than execute `wstest -m fuzzingclient -s ./autobahn_fuzzingclient.json`. Result are saved in `reports/tinyws/index.html` by default.
+To run test by yourself you have to [install Autobahn Testsuite](http://autobahn.ws/testsuite/installation.html#installation) first. Next start [**fuzzingEchoServer** example](https://github.com/kiler129/TinyWs/blob/master/examples/fuzzingEchoServer.php) and than execute `wstest -m fuzzingclient -s ./autobahn_fuzzingclient.json`. Result are saved in `reports/tinyws/index.html` by default.  
+Also remember to disable XDebug running tests - some of them have time limits. For example 9.4.1 can fail with after 100 seconds if XDebug is enabled (when it's disabled 9.4.1 takes no more than 3s).
+
 
 ## Why there are special settings for tests?
 Don't blame me, it's IETF fault actually :)  
