@@ -189,7 +189,7 @@ class WebSocketClient extends StreamServerNode implements StreamServerNodeInterf
      * Verifies & responds to close frame sent by client to server.
      *
      * @throws NodeDisconnectException
-     * @throws WebSocketException WebSocketClient provided invalid closing code.
+     * @throws WebSocketException WebSocketClient provided invalid closing code or whole payload
      */
     private function handleClientCloseFrame()
     {
@@ -197,7 +197,12 @@ class WebSocketClient extends StreamServerNode implements StreamServerNodeInterf
 
         //TODO strict
         $code = $this->currentFrame->getPayloadPart(0, 2);
+
         if (!empty($code)) { //Code is optional BUT it can't be 0
+            if (!isset($code[1])) { // payload have to be at least 2 bytes
+                throw new WebSocketException("Invalid closing payload", DataFrame::CODE_PROTOCOL_ERROR);
+            }
+
             $code = unpack("n", $code);
             $code = $code[1]; //Array dereference on call is allowed from 5.4
             $this->logger->debug("Client disconnected with code: " . $code);
