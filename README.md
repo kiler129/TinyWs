@@ -44,20 +44,20 @@ Details will be available soon.
 
 ### Basic usage
 Everytime message arrives, client connect/disconnect or some sort of exception occur TinyWs calls your own "ClientsHandler". It's just an object implementing (well documented) [`ClientsHandlerInterface`](https://github.com/kiler129/TinyWs/blob/master/src/ClientsHandlerInterface.php) interface. To simplify usage in really basic applications you can also just extend [`AbstractClientsHandler`](https://github.com/kiler129/TinyWs/blob/master/src/AbstractClientsHandler.php) and implement onMessage() method only.  
-How simple is that? Take a look at [echo server implementation]((https://github.com/kiler129/TinyWs/blob/master/examples/echoServer.php).
+How simple is that? Take a look at [echo server implementation](https://github.com/kiler129/TinyWs/blob/master/examples/echoServer.php).
 
 ## FAQ
 #### Is it stable?
 Long time before library was published on GitHub it was tested under various conditions. It was verified to work flawless in commercial application with multiple users using different software configurations.
 
-#### Is it fast enough to **PLACE SCENARIO HERE**?
+#### Is it fast enough to *PLACE SCENARIO HERE*?
 Every piece of that code is written with performance in mind. There's no faster PHP-bases WebSocket server on the market ;)
 
 Notes:
   * Disable X-Debug in production environment (it really matters).  You need to comment out module in php.ini (setting xdebug.* to 0 is not enough).
   * Use *nix operating system - handling large amount of connections on Windows is not so efficient.
 
-#### Could you add **PLACE FEATURE NAME HERE**?
+#### Could you add *PLACE FEATURE NAME HERE*?
 Every feature request will be considered. Library is under active development, however I cannot implement everything right away myself, so pull-requests are kindly welcomed.
 
 #### Does it work in HHVM environment?
