@@ -74,4 +74,5 @@ Before you start thinking about understanding internals of this library you have
 Simple chart for overall application flow is planned to land here. In meantime you can check code itself - it's well documented using industry standard [phpDocumentor](http://manual.phpdoc.org).
 
 #### Multiple connections handling mechanism
-It's covered by [CherryHttp README](https://github.com/kiler129/CherryHttp/blob/master/README.md).
+#### Why some methods uses type-hinting and some not?
+These questions are covered by [CherryHttp README](https://github.com/kiler129/CherryHttp/blob/master/README.md).
