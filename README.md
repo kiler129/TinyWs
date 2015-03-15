@@ -18,7 +18,7 @@ However due to lack of time few features aren't implemented:
   * **Automatic fragmentation**: not an limitation, but missing improvement (but it isn't easy to implement **properly**)
   * **Protocol extensions**: there are actually no practical usage for them now (except per-packet compression)
   * **Packets compression**: considered more like Chrome-experiment with more cons than pros
-  * **WebSocket over SPDY**: it's only an experiment for now
+  * **WebSocket over SPDY**: it's only an experiment for now  
 You could treat list above as small roadmap rather than list arguments against using this library ;)
 
 ## Usage
