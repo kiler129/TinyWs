@@ -5,6 +5,7 @@ use InvalidArgumentException;
 use LogicException;
 use OverflowException;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Single WebSocket message
@@ -37,9 +38,10 @@ final class Message
      *
      * @throws WebSocketException
      */
-    public function __construct(LoggerInterface $logger, DataFrame $frame = null)
+    public function __construct(LoggerInterface $logger = null, DataFrame $frame = null)
     {
-        $this->logger = $logger;
+        $this->logger = ($logger === null) ? new NullLogger() : $logger;
+        $this->router = ($router === null) ? new HttpRouter($this->logger) : $router;
 
         if ($frame === null) {
             $this->isComplete = true;
