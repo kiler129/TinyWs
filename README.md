@@ -24,7 +24,7 @@ You could treat list above as small roadmap rather than list arguments against u
 ## Usage
 ### Requirements
   * PHP >=5.3 (5.6+ is recommended due to performance improvements)
-  * OpenSSL
+  * PHP modules: OpenSSL, mbstring
   * [CherryHttp](https://github.com/kiler129/CherryHttp)
   * [PSR-3 interfaces](https://github.com/php-fig/log)
   * [PSR-3 complaint logger](https://packagist.org/search/?tags=psr-3) is recommended (eg. lightweight [Shout](https://github.com/kiler129/Shout))

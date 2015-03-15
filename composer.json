@@ -21,6 +21,7 @@
   "require": {
     "php": ">=5.3.0",
     "lib-openssl": "*",
+    "ext-mbstring": "*",
     "noflash/cherryhttp": "dev-master",
     "psr/log": "~1.0"
   },
