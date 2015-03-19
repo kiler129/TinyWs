@@ -1,139 +1,28 @@
 <?php
+/*
+ * @author Grzegorz Zdanowski <grzegorz129@gmail.com>
+ *
+ * @project TinyWs
+ * @package 
+ */
+
 namespace noFlash\TinyWs;
 
 use Exception;
 use LengthException;
 use noFlash\CherryHttp\NodeDisconnectException;
-use noFlash\CherryHttp\StreamServerNode;
-use noFlash\CherryHttp\StreamServerNodeInterface;
-use Psr\Log\LoggerInterface;
 
 /**
- * Class WebSocketClient
- * @package noFlash\tinyWS
+ * Represents standard WebSocket client.
+ *
+ * @package noFlash\TinyWs
  */
-class WebSocketClient extends StreamServerNode implements StreamServerNodeInterface
-{
-    /** @var LoggerInterface */
-    protected $logger;
-
-    /** @var ClientsHandlerInterface */
-    private $handler;
-
-    /** @var Message */
-    private $currentMessage = null;
-
-    /** @var NetworkFrame */
-    private $currentFrame = null;
-
+class WebSocketClient extends ClientsPacketRouter {
     /** @var DataFrame */
-    private $currentPingFrame = null;
+    protected $currentPingFrame = null;
 
     /**
-     * @param ClientsHandlerInterface $handler
-     * @param resource $socket WebSocketClient stream socket
-     * @param LoggerInterface $logger
-     */
-    public function __construct(ClientsHandlerInterface $handler, $socket, LoggerInterface $logger)
-    {
-
-        $this->handler = $handler;
-        $this->logger = $logger;
-
-        $peerName = stream_socket_get_name($socket, true);
-        parent::__construct($socket, $peerName, $this->logger);
-    }
-
-    /**
-     * Takes care of current frame.
-     *
-     * @throws WebSocketException
-     */
-    private function routeCurrentFrame()
-    {
-        $this->logger->debug("Routing frame");
-
-        $opcode = $this->currentFrame->getOpcode();
-        if ($opcode === DataFrame::OPCODE_TEXT || $opcode === DataFrame::OPCODE_BINARY || $opcode === DataFrame::OPCODE_CONTINUE) { //Non-control frame
-            if ($this->currentMessage === null) //No message in processing - new need to be build
-            {
-                $this->logger->debug("No message, creating new");
-                $this->currentMessage = new Message($this->logger, $this->currentFrame);
-
-            } else { //Only first frame should contain a type
-                $this->logger->debug("Adding frame to message");
-                $this->currentMessage->addFrame($this->currentFrame);
-            }
-
-            if ($this->currentMessage->isComplete()) {
-                $this->logger->debug("Message completed, notifying API");
-                $this->handler->onMessage($this, $this->currentMessage);
-                $this->currentMessage = null; //Message is completed, API has been notified so no need to hold it here
-
-            } else {
-                $this->logger->debug("Message not completed yet");
-            }
-
-        } elseif ($opcode === DataFrame::OPCODE_CLOSE) {
-            $this->handleClientCloseFrame();
-
-        } elseif ($opcode === DataFrame::OPCODE_PING) {
-            $this->handlePingFrame();
-
-        } elseif ($opcode === DataFrame::OPCODE_PONG) {
-            $this->handlePongFrame();
-
-        } else {
-            throw new WebSocketException("Non-RFC or reserved opcode, or first message frame with continue opcode",
-                DataFrame::CODE_PROTOCOL_ERROR);
-        }
-
-        $this->currentFrame = null;
-        $this->logger->debug("Frame routing completed");
-    }
-
-    /**
-     * Process WebSocket data stream collecting frames until final message is reached.
-     * It parses one frame at a time, and it's code is messy due to WebSocket protocol craziness.
-     *
-     * @return bool Returns false in case of some data are still in buffer and can form new frame, true otherwise
-     *     (meaning processing of buffer has been finished).
-     * @throws NodeDisconnectException
-     */
-    protected function processInputBuffer()
-    {
-        $this->logger->debug("Processing WS request...");
-
-        try {
-            if ($this->currentFrame === null) //No frame in processing - new need to be build
-            {
-                $this->logger->debug("Creating new frame in client");
-                $this->currentFrame = new NetworkFrame($this->logger, $this->inputBuffer);
-            }
-
-            if (!$this->currentFrame->isComplete()) {
-                $this->logger->debug("Frame not completed yet, skipping processing");
-
-                return true;
-            }
-
-            //Current frame is completed, this call also "kick" the frame to try fetching new data from buffer (if any)
-            $this->routeCurrentFrame();
-
-            return empty($this->inputBuffer); //This method will be called again if buffer is not empty
-
-
-        } catch(Exception $e) {
-            $this->handleWebSocketException($e);
-
-            return true; //handleWebSocketException() will disconnect client, so it's useless to parse buffer
-        }
-    }
-
-    /**
-     * Handles WebSocketException & other exception thrown by client by sending proper close response.
-     *
-     * @param WebSocketException|Exception $e
+     * {@inheritdoc}
      */
     protected function handleWebSocketException(Exception $e)
     {
@@ -151,12 +40,27 @@ class WebSocketClient extends StreamServerNode implements StreamServerNodeInterf
     }
 
     /**
+     * Disconnects client from server.
+     * It also notifies clients handler about that fact.
+     *
+     * @param bool $drop By default client is disconnected after delivering output buffer contents. Set to true to drop
+     *     it immediately.
+     *
+     * @return void
+     */
+    public function disconnect($drop = false)
+    {
+        $this->handler->onClose($this);
+        parent::disconnect($drop);
+    }
+
+    /**
      * Sends "PING" frame to connected client.
      *
      * @param mixed|null $payload Maximum of 125 bytes. If set to null current time will be used. It's possible to use
      *     empty string.
      *
-     * @return mixed Used payload value
+     * @return string Used payload value
      * @throws LengthException In case of payload exceed 125 bytes.
      */
     public function ping($payload = null)
@@ -178,25 +82,16 @@ class WebSocketClient extends StreamServerNode implements StreamServerNodeInterf
 
     /**
      * {@inheritdoc}
-     */
-    public function disconnect($drop = false)
-    {
-        $this->handler->onClose($this);
-        parent::disconnect($drop);
-    }
-
-    /**
-     * Verifies & responds to close frame sent by client to server.
      *
      * @throws NodeDisconnectException
      * @throws WebSocketException WebSocketClient provided invalid closing code or whole payload
      */
-    private function handleClientCloseFrame()
+    protected function handleClientCloseFrame(NetworkFrame $frame)
     {
         $this->logger->debug("Client sent close frame, parsing");
 
         //TODO strict
-        $code = $this->currentFrame->getPayloadPart(0, 2);
+        $code = $frame->getPayloadPart(0, 2);
 
         if (!empty($code)) { //Code is optional BUT it can't be 0
             if (!isset($code[1])) { // payload have to be at least 2 bytes
@@ -218,32 +113,30 @@ class WebSocketClient extends StreamServerNode implements StreamServerNodeInterf
         }
 
         $this->logger->debug("Converting client close frame into server close frame");
-        $this->currentFrame->setOpcode(DataFrame::OPCODE_CLOSE);
-        $this->currentFrame->setMasking(false);
-        $this->currentFrame->setPayload(pack("n", DataFrame::CODE_CLOSE_NORMAL) . "Client closed connection");
-        $this->pushData($this->currentFrame);
+        $frame->setOpcode(DataFrame::OPCODE_CLOSE);
+        $frame->setMasking(false);
+        $frame->setPayload(pack("n", DataFrame::CODE_CLOSE_NORMAL) . "Client closed connection");
+        $this->pushData($frame);
         $this->disconnect();
-        $this->currentFrame = null;
     }
 
-
     /**
-     * Handles responses to ping frames sent by clients to server.
+     * {@inheritdoc}
      */
-    private function handlePingFrame()
+    protected function handlePingFrame(NetworkFrame $frame)
     {
         $this->logger->debug("Sending pong frame...");
-        $this->currentFrame->setOpcode(DataFrame::OPCODE_PONG);
-        $this->currentFrame->setMasking(false);
-        $this->pushData($this->currentFrame);
+        $frame->setOpcode(DataFrame::OPCODE_PONG);
+        $frame->setMasking(false);
+        $this->pushData($frame);
     }
 
     /**
-     * Verifies pong frame & notifies children class about success pong.
+     * {@inheritdoc}
      *
      * @throws WebSocketException Invalid pong payload
      */
-    private function handlePongFrame()
+    protected function handlePongFrame(NetworkFrame $frame)
     {
         if ($this->currentPingFrame === null) {
             $this->logger->warning("Got unsolicited pong packet from $this - ignoring");
@@ -251,11 +144,20 @@ class WebSocketClient extends StreamServerNode implements StreamServerNodeInterf
             return;
         }
 
-        if ($this->currentPingFrame->getPayload() !== $this->currentFrame->getPayload()) {
+        if ($this->currentPingFrame->getPayload() !== $frame->getPayload()) {
             throw new WebSocketException("Invalid pong payload", DataFrame::CODE_PROTOCOL_ERROR);
         }
 
         $this->handler->onPong($this, $this->currentPingFrame);
         $this->currentPingFrame = null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function handleMessage(Message $message)
+    {
+        $this->logger->debug("Got message from router - notifying API");
+        $this->handler->onMessage($this, $message);
     }
 }
