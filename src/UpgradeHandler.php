@@ -116,7 +116,7 @@ class UpgradeHandler implements HttpRequestHandlerInterface
             throw new HttpException("Cannot upgrade to WebSockets - invalid upgrade header", HttpCode::BAD_REQUEST);
         }
 
-        if (strtolower($request->getHeader("connection")) !== "upgrade") {
+        if (strpos(strtolower($request->getHeader("connection")), "upgrade") === false) {
             throw new HttpException("Cannot upgrade to WebSockets - invalid connection header", HttpCode::BAD_REQUEST);
         }
 
