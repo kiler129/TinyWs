@@ -1,6 +1,5 @@
 <?php
-//require_once('../../../autoload.php');
-require_once('_RequiredFiles.php');
+require_once('../../../autoload.php');
 
 use noFlash\TinyWs\AbstractClientsHandler;
 use noFlash\TinyWs\Message;
