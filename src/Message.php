@@ -19,7 +19,7 @@ final class Message
     //const OPTIMAL_FRAME_SIZE   = 65535;
     const MAXIMUM_MESSAGE_SIZE = 33554432;
     /** @var LoggerInterface */
-    protected $logger; //Recommended value, it will ensure that single frame length will not exceed 32 bits
+    protected $logger;
     private   $format = self::FORMAT_TEXT;
 
     private $payload       = null;
