@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package noFlash\tinyWS
  */
-abstract class ClientsPacketRouter extends StreamServerNode implements StreamServerNodeInterface
+abstract class ClientPacketsRouter extends StreamServerNode implements StreamServerNodeInterface
 {
     /** @var LoggerInterface */
     protected $logger;

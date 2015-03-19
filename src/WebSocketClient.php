@@ -17,7 +17,7 @@ use noFlash\CherryHttp\NodeDisconnectException;
  *
  * @package noFlash\TinyWs
  */
-class WebSocketClient extends ClientsPacketRouter {
+class WebSocketClient extends ClientPacketsRouter {
     /** @var DataFrame */
     protected $currentPingFrame = null;
 
