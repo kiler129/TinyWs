@@ -14,6 +14,12 @@ use Psr\Log\InvalidArgumentException;
  */
 class WebSocketException extends Exception
 {
+    /**
+     * @param string $message Websocket exception message
+     * @param int $code Websocket closing reason code
+     *
+     * @see DataFrame::validateCloseCode()
+     */
     public function __construct($message = "", $code = DataFrame::CODE_POLICY_VIOLATION)
     {
         if (!DataFrame::validateCloseCode($code)) {

@@ -14,6 +14,9 @@ use Psr\Log\LoggerInterface;
 interface ClientsHandlerInterface
 {
 
+    /**
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger);
 
     /**
