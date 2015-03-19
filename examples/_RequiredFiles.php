@@ -30,6 +30,7 @@ require_once('../../cherryhttp/src/ServerException.php');
 //TinyWs
 require_once("../src/ClientsHandlerInterface.php");
 require_once("../src/AbstractClientsHandler.php");
+require_once("../src/ClientPacketsRouter.php");
 require_once("../src/WebSocketClient.php");
 require_once("../src/DataFrame.php");
 require_once("../src/NetworkFrame.php");
