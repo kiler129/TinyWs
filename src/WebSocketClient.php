@@ -17,7 +17,8 @@ use noFlash\CherryHttp\NodeDisconnectException;
  *
  * @package noFlash\TinyWs
  */
-class WebSocketClient extends ClientPacketsRouter {
+class WebSocketClient extends ClientPacketsRouter
+{
     /** @var DataFrame */
     protected $currentPingFrame = null;
 
@@ -52,6 +53,20 @@ class WebSocketClient extends ClientPacketsRouter {
     {
         $this->handler->onClose($this);
         parent::disconnect($drop);
+    }
+
+    /**
+     * Behaves the same as pushData(), but ensures correct data type.
+     * If you want higher performance or you need to sent packets cached internally as strings use pushData().
+     *
+     * @param RawMessageInterface $message
+     *
+     * @return bool
+     * @see \noFlash\CherryHttp\StreamServerNodeInterface::pushData()
+     */
+    public function pushMessage(RawMessageInterface $message)
+    {
+        return $this->pushData((string)$message);
     }
 
     /**

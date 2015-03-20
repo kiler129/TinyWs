@@ -10,7 +10,7 @@ class FuzzingHandler extends AbstractClientsHandler
 {
     public function onMessage(WebSocketClient $client, Message $message)
     {
-        $client->pushData($message);
+        $client->pushData($message); //Faster than pushMessage but will not stop you from passing invalid packets
     }
 }
 

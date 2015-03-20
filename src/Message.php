@@ -12,7 +12,7 @@ use Psr\Log\NullLogger;
  *
  * @package noFlash\tinyWS
  */
-final class Message
+final class Message implements RawMessageInterface
 {
     const FORMAT_BINARY = DataFrame::OPCODE_BINARY;
     const FORMAT_TEXT   = DataFrame::OPCODE_TEXT;
@@ -41,7 +41,7 @@ final class Message
     public function __construct(LoggerInterface $logger = null, DataFrame $frame = null)
     {
         $this->logger = ($logger === null) ? new NullLogger() : $logger;
-        
+
         if ($frame === null) {
             $this->isComplete = true;
 

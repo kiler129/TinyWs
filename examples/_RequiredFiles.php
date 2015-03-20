@@ -32,6 +32,7 @@ require_once("../src/ClientsHandlerInterface.php");
 require_once("../src/AbstractClientsHandler.php");
 require_once("../src/ClientPacketsRouter.php");
 require_once("../src/WebSocketClient.php");
+require_once("../src/RawMessageInterface.php");
 require_once("../src/DataFrame.php");
 require_once("../src/NetworkFrame.php");
 require_once("../src/Message.php");

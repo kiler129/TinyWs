@@ -11,7 +11,7 @@ class EchoHandler extends AbstractClientsHandler
 {
     public function onMessage(WebSocketClient $client, Message $message)
     {
-        $client->pushData($message);
+        $client->pushMessage($message); //Recommended for single messages
     }
 }
 

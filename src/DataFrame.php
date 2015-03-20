@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package noFlash\TinyWs
  */
-class DataFrame
+class DataFrame implements RawMessageInterface
 {
     const MAXIMUM_FRAME_PAYLOAD = 9223372036854775808;
     //const MAXIMUM_FRAME_PAYLOAD = 524288; //512K is sensible amount for single frame
