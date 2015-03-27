@@ -252,7 +252,7 @@ class NetworkFrame extends DataFrame
      * Returns part of the payload [to save memory]
      *
      * @param integer $start Offset from start
-     * @param null|integer $length Number of bytes to return
+     * @param null|integer $length Number of bytes to return. If null it will return payload from $start to end.
      *
      * @return string
      * @throws UnderflowException Payload is not collected yet
@@ -265,7 +265,7 @@ class NetworkFrame extends DataFrame
             throw new UnderflowException("Cannot get frame payload - frame not ready");
         }
 
-        return substr($this->payload, $start, $length);
+        return ($length === null) ? substr($this->payload, $start) : substr($this->payload, $start, $length);
     }
 
     /**
