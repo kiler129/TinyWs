@@ -117,6 +117,10 @@ abstract class ClientPacketsRouter extends StreamServerNode implements StreamSer
                 return true;
             }
 
+            if(!$this->currentFrame->isMasked()) {
+                throw new WebSocketException("Client to server frames must be masked", DataFrame::CODE_PROTOCOL_ERROR);
+            }
+
             //Current frame is completed, this call also "kick" the frame to try fetching new data from buffer (if any)
             $this->routeCurrentFrame();
 

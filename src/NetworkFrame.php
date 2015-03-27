@@ -176,10 +176,7 @@ class NetworkFrame extends DataFrame
                 $this->logger->debug("Got frame mask");
             }
 
-        } else {
-            throw new WebSocketException("Client to server frames must be masked", DataFrame::CODE_PROTOCOL_ERROR);
         }
-
 
         $this->logger->debug("Got full header");
         $this->headersCollected = true;
