@@ -121,10 +121,10 @@ class WebSocketClient extends ClientPacketsRouter
                 throw new WebSocketException("Invalid close code", DataFrame::CODE_PROTOCOL_ERROR);
             }
 
-            //TODO: well, this may be required by RFC - I'm not 100% sure
-            //if(!mb_check_encoding($this->currentFrame->getPayload(), 'UTF-8')) {
-            //    throw new WebSocketException("Text is not valid UTF-8", NetworkFrame::CODE_DATA_TYPE_INCONSISTENT);
-            //}
+            if (!mb_check_encoding($frame->getPayloadPart(2), 'UTF-8')) {
+                throw new WebSocketException("Close frame payload is not valid UTF-8",
+                    NetworkFrame::CODE_DATA_TYPE_INCONSISTENT);
+            }
         }
 
         $this->logger->debug("Converting client close frame into server close frame");

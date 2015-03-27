@@ -19,15 +19,6 @@ In ideal world all test should just display green "Pass" sign, but since there's
 ### 6.4 Fail-fast on invalid UTF-8
 Due to performance reasons encoding is validated after all data fragments are received. There's nothing wrong with "Non-strict" results in that section. Also trying to validate partial frames would be complicated and can result in many false-negatives.
 
-### Case 7.5.1
-"Fail" is expected in this test.  
-RFC 6455 definition of closing frame payload can be interpreted in two ways.
-  1. It can be anything, it MAY be UTF-8 encoded text but application decides if it's text or binary data
-  2. It can be only UTF-8 text, but it's not expected to be human readable
-  
-TinyWs follows 1st convention and Autobahn Testsuite 2nd. In my opinion both are correct, and Autobahn author should mark that case "Non-strict".
-See [*Close frames with binary data & Case 7.5.1*](https://github.com/tavendo/AutobahnTestSuite/issues/43) issue for more details.
-
 ### Section 12 & 13 - WebSocket Compression
 All test cases from these sections are excluded. Packets compression specification aren't stable enough to be implemented into stable release of this server.  
 Also due to little (or actually no) benefits of packets compression and problems & server load this extension implicates it's not supported *by design* in TinyWs. Situation may change in future.
