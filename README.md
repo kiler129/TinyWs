@@ -1,3 +1,9 @@
+# PROJECT ARCHIVED
+
+Sadly I don't have time to maintain this project (along with CherryHTTP). To this day I didn't find fast alternatives yet. However, I can no longer pretend that this old code is something which should be use in production ;)
+
+---
+
 # TinyWs
 High performance, flexible, RFC-complaint & well documented WebSockets server library. It's licensed under MIT, so it can be used in any project (even commercial one) free of charge.
 Despite repository short living time code is production-ready. In fact it's actively used everyday by many people, so I decided to make it open-source to make Internet a better place.
